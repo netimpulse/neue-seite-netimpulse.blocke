@@ -1,0 +1,149 @@
+{% comment %}
+  Custom Header (sticky, repositionierbar)
+  Files needed:
+    - assets/custom-header.css
+    - assets/custom-header.js  (optional visual shadow on scroll)
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'custom-header.css' | asset_url }}" media="all">
+<script src="{{ 'custom-header.js' | asset_url }}" defer="defer"></script>
+
+{%- assign menu_obj = menus[section.settings.main_menu] -%}
+{%- if menu_obj == blank -%}
+  {%- assign menu_obj = linklists[section.settings.main_menu] -%}
+{%- endif -%}
+
+<style>
+  /* Abschnitts-spezifische Variablen */
+  #shopify-section-{{ section.id }} {
+    --ch-height: {{ section.settings.header_height | default: 72 }}px;
+    --ch-bg: {{ section.settings.header_bg | default: '#ffffff' }};
+    --ch-link: {{ section.settings.nav_link_color | default: '#334155' }};
+    --ch-hover-bg: {{ section.settings.nav_hover_bg | default: '#e5e7eb' }};
+    --ch-active-bg: {{ section.settings.nav_active_bg | default: '#334155' }};
+    --ch-active-color: {{ section.settings.nav_active_color | default: '#ffffff' }};
+    --ch-gap: {{ section.settings.nav_gap | default: 28 }}px;
+    --ch-item-pad-y: {{ section.settings.nav_item_pad_y | default: 8 }}px;
+    --ch-item-pad-x: {{ section.settings.nav_item_pad_x | default: 12 }}px;
+    --ch-item-radius: {{ section.settings.nav_item_radius | default: 8 }}px;
+
+    --logo-x: {{ section.settings.logo_offset_x | default: 0 }}px;
+    --logo-y: {{ section.settings.logo_offset_y | default: 0 }}px;
+    --nav-x: {{ section.settings.nav_offset_x | default: 0 }}px;
+    --nav-y: {{ section.settings.nav_offset_y | default: 0 }}px;
+    --cta-x: {{ section.settings.cta_offset_x | default: 0 }}px;
+    --cta-y: {{ section.settings.cta_offset_y | default: 0 }}px;
+
+    --cta-bg: {{ section.settings.cta_bg | default: '#486863' }};
+    --cta-color: {{ section.settings.cta_color | default: '#ffffff' }};
+    --cta-radius: {{ section.settings.cta_radius | default: 10 }}px;
+    --cta-pad-x: {{ section.settings.cta_pad_x | default: 18 }}px;
+    --cta-pad-y: {{ section.settings.cta_pad_y | default: 10 }}px;
+  }
+</style>
+
+<header class="ch-header{% if section.settings.sticky_enable %} ch-sticky{% endif %}{% if section.settings.sticky_shadow %} ch-with-shadow{% endif %}" data-section-id="{{ section.id }}">
+  <div class="ch-inner">
+    <!-- LOGO -->
+    <div class="ch-logo">
+      {% assign logo_href = section.settings.logo_link | default: routes.root_url %}
+      {% if section.settings.logo_type == 'image' and section.settings.logo_image != blank %}
+        <a class="ch-logo-link" href="{{ logo_href }}" aria-label="Home">
+          {{ section.settings.logo_image | image_url: width: 600 | image_tag:
+            widths: '120,180,240,300,360,480,600',
+            class: 'ch-logo-img',
+            style: 'max-width: 100%; height:auto; width:' | append: section.settings.logo_img_width | append: 'px;' }}
+        </a>
+      {% else %}
+        <a class="ch-logo-link ch-logo-text" href="{{ logo_href }}" style="font-size: {{ section.settings.logo_font_size | default: 28 }}px; font-weight: {{ section.settings.logo_font_weight | default: 700 }};">
+          {{ section.settings.logo_text | default: 'netimpuls.' }}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- NAV -->
+    <nav class="ch-nav" role="navigation" aria-label="Primary">
+      <ul class="ch-menu">
+        {% if menu_obj and menu_obj.links.size > 0 %}
+          {% for l in menu_obj.links %}
+            {% assign is_active = false %}
+            {% if l.active or l.child_active or l.current or l.child_current %}{% assign is_active = true %}{% endif %}
+            <li class="ch-item{% if is_active %} is-active{% endif %}">
+              <a class="ch-link" href="{{ l.url }}">{{ l.title }}</a>
+            </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </nav>
+
+    <!-- CTA BUTTON -->
+    {% if section.settings.cta_label != blank %}
+      <div class="ch-cta-wrap">
+        <a class="ch-cta" href="{{ section.settings.cta_link | default: '#' }}">{{ section.settings.cta_label }}</a>
+      </div>
+    {% endif %}
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Custom Header (Sticky)",
+  "settings": [
+    { "type": "color", "id": "header_bg", "label": "Header Hintergrundfarbe", "default": "#ffffff" },
+    { "type": "range", "id": "header_height", "min": 56, "max": 120, "step": 1, "unit": "px", "label": "Header Höhe", "default": 72 },
+    { "type": "checkbox", "id": "sticky_enable", "label": "Sticky (beim Scrollen sichtbar)", "default": true },
+    { "type": "checkbox", "id": "sticky_shadow", "label": "Schatten beim Scrollen anzeigen", "default": true },
+
+    { "type": "header", "content": "Logo" },
+    { "type": "select", "id": "logo_type", "label": "Logo-Typ", "default": "text", "options": [
+      { "value": "text", "label": "Schriftzug" },
+      { "value": "image", "label": "Bild" }
+    ]},
+    { "type": "text", "id": "logo_text", "label": "Schriftzug", "default": "netimpuls." },
+    { "type": "range", "id": "logo_font_size", "min": 14, "max": 64, "step": 1, "unit": "px", "label": "Schriftgröße", "default": 28 },
+    { "type": "select", "id": "logo_font_weight", "label": "Schriftstärke", "default": "700", "options": [
+      { "value": "400", "label": "Normal (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semibold (600)" },
+      { "value": "700", "label": "Bold (700)" }
+    ]},
+    { "type": "image_picker", "id": "logo_image", "label": "Logo-Bild" },
+    { "type": "range", "id": "logo_img_width", "min": 40, "max": 260, "step": 1, "unit": "px", "label": "Logo-Bildbreite", "default": 150 },
+    { "type": "url", "id": "logo_link", "label": "Logo-Link" },
+
+    { "type": "header", "content": "Navigation" },
+    { "type": "link_list", "id": "main_menu", "label": "Menü auswählen" },
+    { "type": "color", "id": "nav_link_color", "label": "Linkfarbe", "default": "#334155" },
+    { "type": "color", "id": "nav_hover_bg", "label": "Hover Hintergrund", "default": "#e5e7eb" },
+    { "type": "color", "id": "nav_active_bg", "label": "Aktiv Hintergrund", "default": "#486863" },
+    { "type": "color", "id": "nav_active_color", "label": "Aktiv Textfarbe", "default": "#ffffff" },
+    { "type": "range", "id": "nav_gap", "min": 8, "max": 60, "step": 1, "unit": "px", "label": "Abstand zwischen Menüpunkten", "default": 28 },
+    { "type": "range", "id": "nav_item_pad_x", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "Innenabstand X (Links)", "default": 12 },
+    { "type": "range", "id": "nav_item_pad_y", "min": 4, "max": 18, "step": 1, "unit": "px", "label": "Innenabstand Y (Links)", "default": 8 },
+    { "type": "range", "id": "nav_item_radius", "min": 0, "max": 20, "step": 1, "unit": "px", "label": "Eckenradius Links", "default": 8 },
+
+    { "type": "header", "content": "CTA-Button" },
+    { "type": "text", "id": "cta_label", "label": "CTA-Text", "default": "Analyse anfordern" },
+    { "type": "url", "id": "cta_link", "label": "CTA-Link" },
+    { "type": "color", "id": "cta_bg", "label": "CTA Hintergrund", "default": "#486863" },
+    { "type": "color", "id": "cta_color", "label": "CTA Textfarbe", "default": "#ffffff" },
+    { "type": "range", "id": "cta_radius", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "CTA Eckenradius", "default": 10 },
+    { "type": "range", "id": "cta_pad_x", "min": 8, "max": 32, "step": 1, "unit": "px", "label": "CTA Padding X", "default": 18 },
+    { "type": "range", "id": "cta_pad_y", "min": 6, "max": 20, "step": 1, "unit": "px", "label": "CTA Padding Y", "default": 10 },
+
+    { "type": "header", "content": "Freies Positionieren (Offsets)" },
+    { "type": "range", "id": "logo_offset_x", "min": -300, "max": 300, "step": 1, "unit": "px", "label": "Logo X", "default": 0 },
+    { "type": "range", "id": "logo_offset_y", "min": -100, "max": 100, "step": 1, "unit": "px", "label": "Logo Y", "default": 0 },
+    { "type": "range", "id": "nav_offset_x", "min": -300, "max": 300, "step": 1, "unit": "px", "label": "Menü X (vom Zentrum)", "default": 0 },
+    { "type": "range", "id": "nav_offset_y", "min": -100, "max": 100, "step": 1, "unit": "px", "label": "Menü Y", "default": 0 },
+    { "type": "range", "id": "cta_offset_x", "min": -300, "max": 300, "step": 1, "unit": "px", "label": "Button X", "default": 0 },
+    { "type": "range", "id": "cta_offset_y", "min": -100, "max": 100, "step": 1, "unit": "px", "label": "Button Y", "default": 0 }
+  ],
+  "presets": [
+    { "name": "Custom Header (Sticky)" }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}{% endstylesheet %}
+{% javascript %}{% endjavascript %}
