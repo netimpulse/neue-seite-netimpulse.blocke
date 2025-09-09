@@ -1,8 +1,8 @@
 {% comment %}
   Custom Header (sticky, repositionierbar)
-  Files needed:
+  Benötigt:
     - assets/custom-header.css
-    - assets/custom-header.js  (optional visual shadow on scroll)
+    - assets/custom-header.js (optional)
 {% endcomment %}
 
 <link rel="stylesheet" href="{{ 'custom-header.css' | asset_url }}" media="all">
@@ -14,7 +14,6 @@
 {%- endif -%}
 
 <style>
-  /* Abschnitts-spezifische Variablen */
   #shopify-section-{{ section.id }} {
     --ch-height: {{ section.settings.header_height | default: 72 }}px;
     --ch-bg: {{ section.settings.header_bg | default: '#ffffff' }};
@@ -90,7 +89,9 @@
   "name": "Custom Header (Sticky)",
   "settings": [
     { "type": "color", "id": "header_bg", "label": "Header Hintergrundfarbe", "default": "#ffffff" },
-    { "type": "range", "id": "header_height", "min": 56, "max": 120, "step": 1, "unit": "px", "label": "Header Höhe", "default": 72 },
+
+    { "type": "number", "id": "header_height", "label": "Header Höhe (px)", "default": 72 },
+
     { "type": "checkbox", "id": "sticky_enable", "label": "Sticky (beim Scrollen sichtbar)", "default": true },
     { "type": "checkbox", "id": "sticky_shadow", "label": "Schatten beim Scrollen anzeigen", "default": true },
 
@@ -100,7 +101,7 @@
       { "value": "image", "label": "Bild" }
     ]},
     { "type": "text", "id": "logo_text", "label": "Schriftzug", "default": "netimpuls." },
-    { "type": "range", "id": "logo_font_size", "min": 14, "max": 64, "step": 1, "unit": "px", "label": "Schriftgröße", "default": 28 },
+    { "type": "number", "id": "logo_font_size", "label": "Schriftgröße (px)", "default": 28 },
     { "type": "select", "id": "logo_font_weight", "label": "Schriftstärke", "default": "700", "options": [
       { "value": "400", "label": "Normal (400)" },
       { "value": "500", "label": "Medium (500)" },
@@ -108,7 +109,9 @@
       { "value": "700", "label": "Bold (700)" }
     ]},
     { "type": "image_picker", "id": "logo_image", "label": "Logo-Bild" },
-    { "type": "range", "id": "logo_img_width", "min": 40, "max": 260, "step": 1, "unit": "px", "label": "Logo-Bildbreite", "default": 150 },
+
+    { "type": "number", "id": "logo_img_width", "label": "Logo-Bildbreite (px)", "default": 150 },
+
     { "type": "url", "id": "logo_link", "label": "Logo-Link" },
 
     { "type": "header", "content": "Navigation" },
@@ -117,27 +120,28 @@
     { "type": "color", "id": "nav_hover_bg", "label": "Hover Hintergrund", "default": "#e5e7eb" },
     { "type": "color", "id": "nav_active_bg", "label": "Aktiv Hintergrund", "default": "#486863" },
     { "type": "color", "id": "nav_active_color", "label": "Aktiv Textfarbe", "default": "#ffffff" },
-    { "type": "range", "id": "nav_gap", "min": 8, "max": 60, "step": 1, "unit": "px", "label": "Abstand zwischen Menüpunkten", "default": 28 },
-    { "type": "range", "id": "nav_item_pad_x", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "Innenabstand X (Links)", "default": 12 },
-    { "type": "range", "id": "nav_item_pad_y", "min": 4, "max": 18, "step": 1, "unit": "px", "label": "Innenabstand Y (Links)", "default": 8 },
-    { "type": "range", "id": "nav_item_radius", "min": 0, "max": 20, "step": 1, "unit": "px", "label": "Eckenradius Links", "default": 8 },
+
+    { "type": "number", "id": "nav_gap", "label": "Abstand zwischen Menüpunkten (px)", "default": 28 },
+    { "type": "number", "id": "nav_item_pad_x", "label": "Innenabstand X (Links, px)", "default": 12 },
+    { "type": "number", "id": "nav_item_pad_y", "label": "Innenabstand Y (Links, px)", "default": 8 },
+    { "type": "number", "id": "nav_item_radius", "label": "Eckenradius Links (px)", "default": 8 },
 
     { "type": "header", "content": "CTA-Button" },
     { "type": "text", "id": "cta_label", "label": "CTA-Text", "default": "Analyse anfordern" },
     { "type": "url", "id": "cta_link", "label": "CTA-Link" },
     { "type": "color", "id": "cta_bg", "label": "CTA Hintergrund", "default": "#486863" },
     { "type": "color", "id": "cta_color", "label": "CTA Textfarbe", "default": "#ffffff" },
-    { "type": "range", "id": "cta_radius", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "CTA Eckenradius", "default": 10 },
-    { "type": "range", "id": "cta_pad_x", "min": 8, "max": 32, "step": 1, "unit": "px", "label": "CTA Padding X", "default": 18 },
-    { "type": "range", "id": "cta_pad_y", "min": 6, "max": 20, "step": 1, "unit": "px", "label": "CTA Padding Y", "default": 10 },
+    { "type": "number", "id": "cta_radius", "label": "CTA Eckenradius (px)", "default": 10 },
+    { "type": "number", "id": "cta_pad_x", "label": "CTA Padding X (px)", "default": 18 },
+    { "type": "number", "id": "cta_pad_y", "label": "CTA Padding Y (px)", "default": 10 },
 
     { "type": "header", "content": "Freies Positionieren (Offsets)" },
-    { "type": "range", "id": "logo_offset_x", "min": -300, "max": 300, "step": 1, "unit": "px", "label": "Logo X", "default": 0 },
-    { "type": "range", "id": "logo_offset_y", "min": -100, "max": 100, "step": 1, "unit": "px", "label": "Logo Y", "default": 0 },
-    { "type": "range", "id": "nav_offset_x", "min": -300, "max": 300, "step": 1, "unit": "px", "label": "Menü X (vom Zentrum)", "default": 0 },
-    { "type": "range", "id": "nav_offset_y", "min": -100, "max": 100, "step": 1, "unit": "px", "label": "Menü Y", "default": 0 },
-    { "type": "range", "id": "cta_offset_x", "min": -300, "max": 300, "step": 1, "unit": "px", "label": "Button X", "default": 0 },
-    { "type": "range", "id": "cta_offset_y", "min": -100, "max": 100, "step": 1, "unit": "px", "label": "Button Y", "default": 0 }
+    { "type": "number", "id": "logo_offset_x", "label": "Logo X (px)", "default": 0 },
+    { "type": "number", "id": "logo_offset_y", "label": "Logo Y (px)", "default": 0 },
+    { "type": "number", "id": "nav_offset_x", "label": "Menü X (px, vom Zentrum)", "default": 0 },
+    { "type": "number", "id": "nav_offset_y", "label": "Menü Y (px)", "default": 0 },
+    { "type": "number", "id": "cta_offset_x", "label": "Button X (px)", "default": 0 },
+    { "type": "number", "id": "cta_offset_y", "label": "Button Y (px)", "default": 0 }
   ],
   "presets": [
     { "name": "Custom Header (Sticky)" }
