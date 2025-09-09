@@ -1,0 +1,103 @@
+/* Custom Header – scoped utility styles */
+.ch-header {
+  background: var(--ch-bg);
+  width: 100%;
+  z-index: 40;
+}
+
+.ch-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.ch-with-shadow.is-stuck {
+  box-shadow: 0 6px 18px rgba(0,0,0,.07);
+}
+
+.ch-inner {
+  max-width: var(--page-width, 1200px);
+  margin: 0 auto;
+  padding: 0 16px;
+  height: var(--ch-height);
+  position: relative;
+}
+
+/* Positioning anchors + free offsets */
+.ch-logo,
+.ch-nav,
+.ch-cta-wrap {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ch-logo { left: 0; transform: translate(0, -50%) translate(var(--logo-x), var(--logo-y)); }
+.ch-nav { left: 50%; transform: translate(-50%, -50%) translate(var(--nav-x), var(--nav-y)); }
+.ch-cta-wrap { right: 0; transform: translate(0, -50%) translate(var(--cta-x), var(--cta-y)); }
+
+.ch-logo-text {
+  text-decoration: none;
+  color: var(--ch-link);
+  line-height: 1;
+}
+
+.ch-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: var(--ch-gap);
+  align-items: center;
+  white-space: nowrap;
+}
+
+.ch-item { display: block; }
+
+.ch-link {
+  text-decoration: none;
+  color: var(--ch-link);
+  display: inline-block;
+  padding: var(--ch-item-pad-y) var(--ch-item-pad-x);
+  border-radius: var(--ch-item-radius);
+  transition: background-color .2s ease, color .2s ease, opacity .2s ease;
+}
+
+.ch-link:hover,
+.ch-link:focus-visible {
+  background: var(--ch-hover-bg);
+  outline: none;
+}
+
+.ch-item.is-active > .ch-link {
+  background: var(--ch-active-bg);
+  color: var(--ch-active-color);
+}
+
+.ch-cta {
+  display: inline-block;
+  background: var(--cta-bg);
+  color: var(--cta-color);
+  padding: var(--cta-pad-y) var(--cta-pad-x);
+  border-radius: var(--cta-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform .12s ease, opacity .2s ease, filter .2s ease;
+}
+
+.ch-cta:hover { filter: brightness(0.96); }
+.ch-cta:active { transform: translateY(1px); }
+
+/* Simple mobile niceties */
+@media (max-width: 900px) {
+  .ch-inner { padding: 0 12px; }
+  .ch-menu { gap: 18px; }
+}
+
+@media (max-width: 700px) {
+  .ch-nav { left: 50%; right: 0; }
+  .ch-menu {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ch-link { padding: 8px 10px; }
+}
